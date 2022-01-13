@@ -4,7 +4,11 @@ import "antd/dist/antd.css";
 import "../static/css/index.css";
 import logoImg from "../static/img/Logo.png";
 import { Avatar, Space, Input, Select, Button, Modal } from "antd";
-import { QuestionCircleFilled, PlusOutlined } from "@ant-design/icons";
+import {
+  QuestionCircleFilled,
+  PlusOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import { Component } from "react";
 import MyMenu from "./menu";
 import { connect } from "react-redux";
@@ -18,11 +22,29 @@ class index extends Component {
       newEmail: "",
       newPermission: "",
       showElem: "block",
+      isPC: true,
     };
   }
   componentDidMount() {
-    console.log(this.props);
+    this.setState({
+      isPC: this.IsPC(),
+    });
   }
+  IsPC = () => {
+    const userAgentInfo = navigator.userAgent;
+    const Agents = [
+      "Android",
+      "iPhone",
+      "SymbianOS",
+      "Windows Phone",
+      "iPad",
+      "iPod",
+    ];
+    const flag = Agents.filter((item) => {
+      return userAgentInfo.includes(item);
+    });
+    return !flag.length;
+  };
   itemChange = (event) => {
     const value = event.target ? event.target.value : event;
     if (event.target) {
@@ -120,10 +142,9 @@ class index extends Component {
       showElem: "none",
     });
   };
-  render() {
-    const { userList } = this.state;
-    return (
-      <div className="container">
+  getHeader = () => {
+    if (this.state.isPC) {
+      return (
         <header className="header">
           <span className="header-text">dataReachable</span>
           <Space className="header-right">
@@ -139,8 +160,91 @@ class index extends Component {
             </Avatar>
           </Space>
         </header>
+      );
+    } else {
+      return (
+        <header className="header">
+          <span className="header-text">dataReachable</span>
+          <Space className="header-right">
+            <Avatar style={{ backgroundColor: "#006d75" }}>YL</Avatar>
+            <UnorderedListOutlined twoToneColor="#fa541c" />
+          </Space>
+        </header>
+      );
+    }
+  };
+  getLogo = () => {
+    if (this.state.isPC) {
+      return (
+        <div className="content-line">
+          <Space className="content-flex-row">
+            <div className="content-flex-title">Status</div>
+            <div className="content-flex-text">
+              Private
+              <QuestionCircleFilled />
+            </div>
+          </Space>
+          <Space
+            className="content-flex-row"
+            style={{ marginRight: "100px", alignItems: "center" }}
+          >
+            <img
+              src={logoImg}
+              style={{
+                width: "60px",
+                height: "60px",
+              }}
+            />
+            <a href="#" className="content-link-text">
+              Change Logo
+            </a>
+          </Space>
+        </div>
+      );
+    } else {
+      return (
+        <>
+          <div className="content-line content-mobile-logo">
+            <Space className="content-flex-row content-flex-mobile">
+              <img
+                src={logoImg}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                }}
+              />
+              <a href="#" className="content-link-text">
+                Change Logo
+              </a>
+            </Space>
+          </div>
+          <div className="content-line">
+            <Space className="content-flex-row">
+              <div className="content-flex-title">Status</div>
+              <div className="content-flex-text">
+                Private
+                <QuestionCircleFilled />
+              </div>
+            </Space>
+          </div>
+        </>
+      );
+    }
+  };
+  getMenu = () => {
+    if (this.state.isPC) {
+      return <MyMenu />;
+    } else {
+      return <></>;
+    }
+  };
+  render() {
+    const { userList } = this.state;
+    return (
+      <div className="container">
+        {this.getHeader()}
         <div className="main">
-          <MyMenu />
+          {this.getMenu()}
           <div className="content">
             <div className="content-line">
               <Input
@@ -149,30 +253,7 @@ class index extends Component {
                 size="large"
               />
             </div>
-            <div className="content-line">
-              <Space className="content-flex-row">
-                <div className="content-flex-title">Status</div>
-                <div className="content-flex-text">
-                  Private
-                  <QuestionCircleFilled />
-                </div>
-              </Space>
-              <Space
-                className="content-flex-row"
-                style={{ marginRight: "100px", alignItems: "center" }}
-              >
-                <img
-                  src={logoImg}
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                  }}
-                />
-                <a href="#" className="content-link-text">
-                  Change Logo
-                </a>
-              </Space>
-            </div>
+            {this.getLogo()}
             <div className="content-line">
               <Space className="content-flex-row">
                 <div className="content-flex-title">Members</div>
@@ -201,11 +282,7 @@ class index extends Component {
                     {user.permissions ? (
                       user.permissions
                     ) : (
-                      <Select
-                        defaultValue=""
-                        style={{ width: 120 }}
-                        bordered={false}
-                      >
+                      <Select defaultValue="" bordered={false} size="small">
                         <Option value="">can edit</Option>
                         <Option value="owner">owner</Option>
                         <Option value="deny">deny</Option>
@@ -219,7 +296,7 @@ class index extends Component {
             <div
               className="content-table-line add-organization aside-link"
               onClick={this.addMember}
-              style={{ display: this.state.showElem, width: "20%" }}
+              style={{ display: this.state.showElem, width: "50%" }}
             >
               <Space size={20}>
                 <PlusOutlined />
