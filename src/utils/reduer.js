@@ -17,9 +17,9 @@ const store = {
 const reducer = (state = store, action) => {
     switch (action.type) {
         case 'user':
-            return { ...state, userList: action.value };
+            return Object.assign({}, state, { userList: [...action.value] });
         case 'organization':
-            return { ...state, organizationList: action.value };
+            return Object.assign({}, state, { organizationList: [...action.value] });
         default:
             return state;
     }

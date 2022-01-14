@@ -17,7 +17,6 @@ class index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userList: this.props.userList,
       newName: "",
       newEmail: "",
       newPermission: "",
@@ -66,9 +65,10 @@ class index extends Component {
   };
   submitMemberAdd = () => {
     const { newName, newEmail, newPermission } = this.state;
+    let userList = this.props.userList;
     if (
-      this.state.userList.map((item) => item.name).includes(newName) &&
-      this.state.userList.map((item) => item.email).includes(newEmail)
+      userList.map((item) => item.name).includes(newName) &&
+      userList.map((item) => item.email).includes(newEmail)
     ) {
       Modal.warning({
         content: `This input name '${newName}' and email '${newEmail}' has already exist `,
@@ -76,15 +76,14 @@ class index extends Component {
       return false;
     }
     if (newName && newEmail) {
-      this.state.userList.pop();
-      this.state.userList.push({
+      userList.pop();
+      userList.push({
         name: newName,
         email: newEmail,
         permissions: newPermission,
       });
-      this.props.setList(this.state.userList);
+      this.props.setList(userList);
       this.setState({
-        userList: this.state.userList,
         showElem: "block",
       });
     } else {
@@ -114,7 +113,7 @@ class index extends Component {
         onChange={this.itemChange}
       />
     );
-    const permission = (
+    const permissions = (
       <>
         <Select
           defaultValue=""
@@ -132,13 +131,14 @@ class index extends Component {
         </Button>
       </>
     );
-    this.state.userList.push({
-      name: name,
-      email: email,
-      permissions: permission,
+    let userList = this.props.userList;
+    userList.push({
+      name,
+      email,
+      permissions,
     });
+    this.props.setList(userList);
     this.setState({
-      userList: this.state.userList,
       showElem: "none",
     });
   };
@@ -232,7 +232,7 @@ class index extends Component {
     }
   };
   render() {
-    const { userList } = this.state;
+    const { userList } = this.props;
     return (
       <div className="container">
         {this.getHeader()}

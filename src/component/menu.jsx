@@ -5,7 +5,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
 let MyMenu = (props) => {
   let initOrg = props.organizationList;
-  const [organizationList, setList] = useState(initOrg);
   const [newName, setNewName] = useState("");
   const [showElem, setShowElem] = useState("block");
   const newOrgName = useCallback((event) => {
@@ -18,7 +17,7 @@ let MyMenu = (props) => {
   }, [newName]);
   const submitAdd = () => {
     const newName = dataRef.current;
-    if (organizationList.map((item) => item.name).includes(newName)) {
+    if (initOrg.map((item) => item.name).includes(newName)) {
       Modal.warning({
         content: `This input name '${newName}' has already exist `,
       });
@@ -26,11 +25,9 @@ let MyMenu = (props) => {
     }
 
     if (newName) {
-      setList((preOrg) => {
-        preOrg.pop();
-        preOrg.push({ name: newName });
-        return preOrg;
-      });
+      initOrg.pop();
+      initOrg.push({ name: newName });
+      props.setOrgList(initOrg);
       setShowElem(() => "block");
     } else {
       Modal.warning({
@@ -52,10 +49,8 @@ let MyMenu = (props) => {
         </Button>
       </Space>
     );
-    setList((preOrg) => {
-      preOrg.push({ name: inputDom });
-      return preOrg;
-    });
+    initOrg.push({ name: inputDom });
+    props.setOrgList(initOrg);
     setShowElem(() => "none");
   };
   return (
@@ -84,7 +79,7 @@ let MyMenu = (props) => {
           <span className="aside-line-text">dataReachable Pty Ltd</span>
         </Space>
       </div>
-      {organizationList.map((org) => {
+      {initOrg.map((org) => {
         return (
           <div className="aside-line aside-link" key={org.name}>
             <Space size={20}>
