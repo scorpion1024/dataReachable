@@ -1,17 +1,17 @@
 import logoImg from "../static/img/Logo.png";
 import { Space, Input, Button, Modal, Avatar } from "antd";
 import { SearchOutlined, TabletFilled, PlusOutlined } from "@ant-design/icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
 let MyMenu = (props) => {
   let initOrg = props.organizationList;
   const [organizationList, setList] = useState(initOrg);
   const [newName, setNewName] = useState("");
   const [showElem, setShowElem] = useState("block");
-  const newOrgName = (event) => {
+  const newOrgName = useCallback((event) => {
     const value = event.target.value;
     setNewName(value);
-  };
+  }, []);
   const dataRef = useRef();
   useEffect(() => {
     dataRef.current = newName;

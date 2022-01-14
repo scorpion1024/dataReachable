@@ -118,7 +118,7 @@ class index extends Component {
       <>
         <Select
           defaultValue=""
-          style={{ width: 120 }}
+          style={{ width: 80 }}
           bordered={false}
           onChange={this.itemChange}
         >
@@ -231,20 +231,13 @@ class index extends Component {
       );
     }
   };
-  getMenu = () => {
-    if (this.state.isPC) {
-      return <MyMenu />;
-    } else {
-      return <></>;
-    }
-  };
   render() {
     const { userList } = this.state;
     return (
       <div className="container">
         {this.getHeader()}
         <div className="main">
-          {this.getMenu()}
+          {this.state.isPC && <MyMenu />}
           <div className="content">
             <div className="content-line">
               <Input
@@ -282,7 +275,12 @@ class index extends Component {
                     {user.permissions ? (
                       user.permissions
                     ) : (
-                      <Select defaultValue="" bordered={false} size="small">
+                      <Select
+                        defaultValue=""
+                        bordered={false}
+                        size="small"
+                        style={{ width: 80 }}
+                      >
                         <Option value="">can edit</Option>
                         <Option value="owner">owner</Option>
                         <Option value="deny">deny</Option>

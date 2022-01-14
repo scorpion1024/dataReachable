@@ -104,6 +104,9 @@
   .ant-select-selector {
   padding: 0;
 }
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  padding: 0;
+}
 .link-img {
   width: 20px;
   height: 20px;
